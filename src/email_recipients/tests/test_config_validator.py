@@ -10,11 +10,14 @@ from src.email_recipients.exeptions import *
 
 class TestEmailsFileValidator:
 
-    def test_is_valid_email(self, email_validator):
-        assert email_validator._EmailsFileValidator__is_valid_email("test@example.com") is True
-        assert email_validator._EmailsFileValidator__is_valid_email("invalid-email") is False
-        assert email_validator._EmailsFileValidator__is_valid_email("another.test@domain.co") is True
-        assert email_validator._EmailsFileValidator__is_valid_email("test@.com") is False
+    @pytest.mark.parametrize(["email", "result"], [
+        ("test@example.com", True),
+        ("invalid-email", False),
+        ("another.test@domain.co", True),
+        ("test@.com", False)
+    ])
+    def test_is_valid_email(self, email_validator, email, result):
+        assert email_validator._EmailsFileValidator__is_valid_email(email) is result
 
     @patch('pandas.read_excel')
     def test_validate_empty_file(self, mock_read_excel, email_validator):
