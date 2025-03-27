@@ -18,6 +18,6 @@ class InvalidEmailError(EmailError):
     pass
 
 
-class InvalidFileTypeError(Exception):
+class InvalidFileTypeError(EmailError):
     """Ошибка, возникающая, когда файл имеет расширение отличное от Экселя."""
     pass
