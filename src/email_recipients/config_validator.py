@@ -61,7 +61,7 @@ class EmailsFileValidator:
                 raise MissingColumnError("Столбец 'Email' не найден.")
 
             # Проверка каждого адреса электронной почты
-            for index, email in df['Email'].iteritems():
+            for index, email in df['Email'].items():
                 if self.__is_valid_email(email):
                     logger.debug(f"Адрес электронной почты '{email}' на строке {index + 1} корректен.")
                 else:
