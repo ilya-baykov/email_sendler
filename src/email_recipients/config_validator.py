@@ -27,6 +27,15 @@ class EmailsFileValidator:
         email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         return re.match(email_regex, email) is not None
 
+    def __is_valid_extension_file(self) -> None:
+        """
+        Проверка, что файл имеет расширение .xls или .xlsx.
+
+        :raises InvalidFileTypeError: Если файл не является Excel-файлом.
+        """
+        if not (self.file_path.endswith('.xls') or self.file_path.endswith('.xlsx')):
+            raise InvalidFileTypeError("Файл должен быть в формате Excel (.xls или .xlsx).")
+
     def validate(self) -> None:
         """
         Проверка адресов электронной почты в Excel-файле.
@@ -36,9 +45,8 @@ class EmailsFileValidator:
         :raises InvalidEmailError: Если адрес электронной почты некорректен.
         :raises InvalidFileTypeError: Если файл не является Excel-файлом.
         """
-        # Проверка, что файл имеет расширение .xls или .xlsx
-        if not (self.file_path.endswith('.xls') or self.file_path.endswith('.xlsx')):
-            raise InvalidFileTypeError("Файл должен быть в формате Excel (.xls или .xlsx).")
+        # Проверка расширения файла
+        self.__is_valid_extension_file()
 
         try:
             # Чтение Excel-файла
