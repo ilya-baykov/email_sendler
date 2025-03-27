@@ -1,4 +1,5 @@
 # src/email_recipients/tests/test_config_validator.py
+import re
 
 import pytest
 import pandas as pd
@@ -41,7 +42,7 @@ class TestEmailsFileValidator:
             email_validator.validate()
 
     def test_validate_invalid_file_type(self):
-        with pytest.raises(InvalidFileTypeError, match="Файл должен быть в формате Excel (.xls или .xlsx)."):
+        with pytest.raises(InvalidFileTypeError, match=re.escape("Файл должен быть в формате Excel (.xls или .xlsx).")):
             EmailsFileValidator("invalid_file.txt").validate()
 
     @patch('pandas.read_excel')
