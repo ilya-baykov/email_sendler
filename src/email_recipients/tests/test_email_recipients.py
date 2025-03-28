@@ -11,9 +11,9 @@ class TestEmailRecipients:
         ["file_contents", "result"],
         [
             ({'Email': ['ilya.baykov@rt.ru']}, ['ilya.baykov@rt.ru']),
-            (
-                    {'Email': ['ilya.baykov@rt.ru', 'astemir.dyshekov@rt.ru']},
-                    ['ilya.baykov@rt.ru', 'astemir.dyshekov@rt.ru'])
+
+            ({'Email': ['ilya.baykov@rt.ru', 'astemir.dyshekov@rt.ru']},
+             ['ilya.baykov@rt.ru', 'astemir.dyshekov@rt.ru'])
         ]
     )
     def test_get_recipients_list(self, mock_read_excel, email_recipients, file_contents, result):
