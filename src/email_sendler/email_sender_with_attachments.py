@@ -22,7 +22,7 @@ class EmailSenderWithAttachments(AbstractEmailSender):
         :param body: Текст письма
         :param attachments: Список файлов для вложения
         :param mail_to: Адрес получателя (или список адресов)
-        :param copy_recipients: Optional[list[str]] = None
+        :param copy_recipients: Список адресов в копии (или список адресов)
         """
 
         msg = EmailMessage()
@@ -33,6 +33,25 @@ class EmailSenderWithAttachments(AbstractEmailSender):
         msg["Subject"] = subject
         msg.set_content(body)
 
+        self._add_attachments(msg, attachments)  # Добавление вложений
+
+        try:
+            with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+                server.starttls()
+                server.login(self.login_mail, self.password_mail)
+                server.send_message(msg)
+            logger.info("Письмо отправлено успешно с вложениями.")
+        except Exception as e:
+            logger.error(f"Ошибка при отправке письма с вложениями: {e}")
+
+    @staticmethod
+    def _add_attachments(msg, attachments: list):
+        """
+        Добавление вложений в письмо.
+
+        :param msg: Объект письма
+        :param attachments: Список файлов для вложений
+        """
         for file_path in attachments:
             if not os.path.exists(file_path) or os.path.getsize(file_path) > MAX_FILE_SIZE:
                 logger.warning(f"Пропуск вложения {file_path}: файл слишком большой или не существует.")
@@ -44,12 +63,3 @@ class EmailSenderWithAttachments(AbstractEmailSender):
 
             with open(file_path, "rb") as f:
                 msg.add_attachment(f.read(), maintype=maintype, subtype=subtype, filename=os.path.basename(file_path))
-
-        try:
-            with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
-                server.starttls()
-                server.login(self.login_mail, self.password_mail)
-                server.send_message(msg)
-            logger.info("Письмо отправлено успешно с вложениями.")
-        except Exception as e:
-            logger.error(f"Ошибка при отправке письма с вложениями: {e}")
